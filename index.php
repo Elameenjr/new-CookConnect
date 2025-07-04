@@ -459,3 +459,41 @@
         <script src="js/scripts.js"></script>
     </body>
 </html>
+<script>
+function fetchChat() {
+    fetch('chat_fetch.php')
+        .then(res => res.json())
+        .then(data => {
+            let chatBox = document.getElementById('chatBox');
+            chatBox.innerHTML = '';
+            data.forEach(msg => {
+                chatBox.innerHTML += `
+                  <div class="mb-3">
+                    <div class="d-flex align-items-center">
+                      <div class="bg-danger text-white rounded-circle d-flex justify-content-center align-items-center me-2" style="width: 35px; height: 35px;">${msg.username.charAt(0).toUpperCase()}</div>
+                      <div>
+                        <strong class="text-dark">${msg.username}</strong>
+                        <div class="text-muted small">${msg.message}</div>
+                      </div>
+                    </div>
+                  </div>
+                `;
+            });
+            chatBox.scrollTop = chatBox.scrollHeight;
+        });
+}
+document.getElementById('chatForm').onsubmit = function(e) {
+    e.preventDefault();
+    let input = document.getElementById('chatInput');
+    fetch('chat_send.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: 'message=' + encodeURIComponent(input.value)
+    }).then(() => {
+        input.value = '';
+        fetchChat();
+    });
+};
+setInterval(fetchChat, 2000);
+fetchChat();
+</script>

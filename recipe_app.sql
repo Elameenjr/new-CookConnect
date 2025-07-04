@@ -35,7 +35,7 @@ CREATE TABLE `recipes` (
   `servings` varchar(100) DEFAULT NULL,
   `difficulty_level` varchar(100) DEFAULT NULL,
   `picture` varchar(100) DEFAULT NULL,
-  `vidoe` varchar(100) DEFAULT NULL,
+  `video` varchar(100) DEFAULT NULL,
   `ingredients` text,
   `instructions` text,
   `status` varchar(100) DEFAULT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE `recipes` (
 -- Dumping data for table `recipes`
 --
 
-INSERT INTO `recipes` (`title`, `description`, `prep_time`, `cook_time`, `servings`, `difficulty_level`, `picture`, `vidoe`, `ingredients`, `instructions`, `status`, `created_at`, `updated_at`, `id`) VALUES
+INSERT INTO `recipes` (`title`, `description`, `prep_time`, `cook_time`, `servings`, `difficulty_level`, `picture`, `video`, `ingredients`, `instructions`, `status`, `created_at`, `updated_at`, `id`) VALUES
 ('abdulfortech', 'abdulfortech', '1000', '1038', '100', 'Easy', 'uploads/pictures/68629cc52b8d9.jpeg', 'abdulfortech', 'abdulfortech', 'abdulfortech', 'published', '2025-06-30 14:18:45.179625', NULL, 1);
 
 -- --------------------------------------------------------
