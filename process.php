@@ -1,9 +1,17 @@
 <?php
+// File: process.php
+
 session_start();
-require 'connection.php';
+require 'connection.php'; // Adjust this path if your DB connection file has a different name
+
+$conn = new mysqli("localhost", "root", "", "recipe_app"); // Update with your DB credentials
+if ($conn->connect_error) {
+  die("Connection failed: " . $conn->connect_error);
+}
 
 $error = '';
 $success = '';
+
 
 if (isset($_POST['signin']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email']);
@@ -65,27 +73,32 @@ if (isset($_POST['addRecipe']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $ingredients = trim($_POST['ingredients']);
     $instructions = trim($_POST['instructions']);
     $videoPath = trim($_POST['video']);
-    $status = 'published'; // Or 'draft' if needed
+    $status = 'published';
 
+    $user_id = $_SESSION['user']['id'] ?? null;
+    if (!$user_id) {
+        $error = "User not logged in.";
+        return;
+    }
 
-    // Handle picture
+    // Handle image upload
     $picturePath = '';
     if (!empty($_FILES['picture']['name'])) {
         $ext = pathinfo($_FILES['picture']['name'], PATHINFO_EXTENSION);
         $picturePath = 'uploads/pictures/' . uniqid() . '.' . $ext;
         move_uploaded_file($_FILES['picture']['tmp_name'], $picturePath);
     }
-     // Insert into DB
+
+    // Insert into DB
     $stmt = $pdo->prepare("
         INSERT INTO recipes 
-        (title, description, prep_time, cook_time, servings, difficulty_level, picture, vidoe, ingredients, instructions, status)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        (user_id, title, description, prep_time, cook_time, servings, difficulty_level, picture, video, ingredients, instructions, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ");
 
     $result = $stmt->execute([
-        $title, $description, $prep_time, $cook_time, $servings, $difficulty_level,
-        $picturePath, $videoPath, $ingredients, $instructions,
-        $status
+        $user_id, $title, $description, $prep_time, $cook_time, $servings,
+        $difficulty_level, $picturePath, $videoPath, $ingredients, $instructions, $status
     ]);
 
     if ($result) {
@@ -93,8 +106,8 @@ if (isset($_POST['addRecipe']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $error = "Failed to save recipe.";
     }
-
 }
+
 
 ?>
 
