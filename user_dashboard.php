@@ -8,6 +8,94 @@
   <link rel="icon" href="assets/favicon.ico" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    /* Homepage coloring styles */
+    .bg-danger {
+      background: linear-gradient(120deg, #ff512f 0%, #dd2476 100%) !important;
+    }
+    .btn-danger, .btn-danger:focus {
+      background: linear-gradient(90deg, #ff512f 0%, #dd2476 100%) !important;
+      border: none;
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(221,36,118,0.08);
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    }
+    .btn-danger:hover {
+      background: #dd2476 !important;
+      color: #fff !important;
+    }
+    .btn-outline-danger {
+      border-color: #dd2476 !important;
+      color: #dd2476 !important;
+      background: #fff;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-outline-danger:hover, .btn-outline-danger:focus {
+      background: #dd2476 !important;
+      color: #fff !important;
+      border-color: #dd2476 !important;
+    }
+    .badge.bg-danger-subtle, .badge.bg-danger-subtle.text-danger {
+      background: #fff3e0 !important;
+      color: #dd2476 !important;
+      border: 1px solid #ff512f;
+    }
+    .nav-link.active, .nav-hover:hover {
+      color: #fff !important;
+      background: linear-gradient(90deg, #ff512f 0%, #dd2476 100%) !important;
+      box-shadow: 0 2px 8px rgba(221,36,118,0.08);
+      border-radius: 0.5rem;
+    }
+    .text-gradient {
+      background: linear-gradient(90deg, #ff512f 0%, #dd2476 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    /* Card hover effect */
+    .card.shadow-sm {
+      transition: transform 0.18s cubic-bezier(.4,2,.6,1), box-shadow 0.18s;
+    }
+    .card.shadow-sm:hover {
+      transform: translateY(-8px) scale(1.025);
+      box-shadow: 0 8px 32px rgba(221,36,118,0.12), 0 1.5px 8px rgba(0,0,0,0.08);
+      z-index: 2;
+    }
+    .card .card-img-top {
+      transition: filter 0.2s, transform 0.2s;
+    }
+    .card.shadow-sm:hover .card-img-top {
+      filter: brightness(0.97) saturate(1.1);
+      transform: scale(1.03);
+    }
+    /* Footer styling */
+    footer.bg-dark {
+      background: linear-gradient(120deg, #232526 0%, #414345 100%);
+      color: #fff;
+      border-top: 4px solid #dd2476;
+      box-shadow: 0 -2px 16px rgba(221,36,118,0.08);
+    }
+    .footer-link:hover, .footer-link:focus {
+      color: #fff !important;
+      text-decoration: underline;
+      transition: color 0.2s;
+    }
+    footer .btn-outline-light:hover, footer .btn-outline-light:focus {
+      background: #dd2476;
+      border-color: #dd2476;
+      color: #fff !important;
+      transform: scale(1.1);
+      transition: all 0.2s;
+    }
+    @media (max-width: 767px) {
+      footer .row > div {
+        text-align: center !important;
+      }
+      footer .d-flex.gap-2 {
+        justify-content: center;
+      }
+    }
+  </style>
 </head>
 <body>
   <!-- Navigation-->
@@ -18,7 +106,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
                         <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.php">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#footerSection ">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#footerSection ">About
                     </ul>
                        <?php if (isset($_SESSION['user'])) { ?>
           <a href="recipe-add.php" class="btn btn-danger"><i class="fas fa-plus me-1"></i> Add Recipe</a>
@@ -36,7 +124,9 @@
 <!-- Header -->
 <header class="bg-danger text-white py-4">
   <div class="container text-center">
-    <h1 class="fw-bold">Welcome, <?php echo $_SESSION['user']['name'] ?? 'Guest'; ?></h1>
+    <h1 class="fw-bold">
+      Welcome, <?php echo isset($_SESSION['user']['name']) ? htmlspecialchars($_SESSION['user']['name']) : 'Guest'; ?>
+    </h1>
     <p class="text-white-50">Manage your profile, recipes, and saved dishes</p>
   </div>
 </header>
@@ -172,50 +262,6 @@
     </div>
   </div>
 </footer>
-<style>
-  /* Card hover effect */
-  .card.shadow-sm {
-      transition: transform 0.18s cubic-bezier(.4,2,.6,1), box-shadow 0.18s;
-  }
-  .card.shadow-sm:hover {
-      transform: translateY(-8px) scale(1.025);
-      box-shadow: 0 8px 32px rgba(221,36,118,0.12), 0 1.5px 8px rgba(0,0,0,0.08);
-      z-index: 2;
-  }
-  .card .card-img-top {
-      transition: filter 0.2s, transform 0.2s;
-  }
-  .card.shadow-sm:hover .card-img-top {
-      filter: brightness(0.97) saturate(1.1);
-      transform: scale(1.03);
-  }
-  .footer-link:hover, .footer-link:focus {
-    color: #fff !important;
-    text-decoration: underline;
-    transition: color 0.2s;
-  }
-  .text-gradient {
-    background: linear-gradient(90deg, #ff512f 0%, #dd2476 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  footer .btn-outline-light:hover, footer .btn-outline-light:focus {
-    background: #dd2476;
-    border-color: #dd2476;
-    color: #fff !important;
-    transform: scale(1.1);
-    transition: all 0.2s;
-  }
-  @media (max-width: 767px) {
-    footer .row > div {
-      text-align: center !important;
-    }
-    footer .d-flex.gap-2 {
-      justify-content: center;
-    }
-  }
-</style>
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
