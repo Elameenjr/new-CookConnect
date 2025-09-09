@@ -4,11 +4,6 @@
 session_start();
 require 'connection.php'; // Adjust this path if your DB connection file has a different name
 
-$conn = new mysqli("localhost", "root", "", "recipe_app"); // Update with your DB credentials
-if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
-}
-
 $error = '';
 $success = '';
 

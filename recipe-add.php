@@ -1,9 +1,60 @@
-<?php 
-    include('process.php');
-    if (!isset($_SESSION['user'])) {
-        header("Location: signin.php");
-        exit;
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+session_start();
+$host = '127.0.0.1';
+$user = 'cookconnect_user';
+$pass = 'StrongPassword123!';
+$db = 'recipe_app';
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8mb4", $user, $pass);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
+
+$error = $success = '';
+
+if (!isset($_SESSION['user'])) {
+    header("Location: signin.php");
+    exit;
+}
+
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addRecipe'])) {
+    $title = trim($_POST['title']);
+    $difficulty_level = $_POST['difficulty_level'];
+    $prep_time = intval($_POST['prep_time']);
+    $cook_time = intval($_POST['cook_time']);
+    $servings = intval($_POST['servings']);
+    $description = trim($_POST['description']);
+    $ingredients = trim($_POST['ingredients']);
+    $instructions = trim($_POST['instructions']);
+    $video = trim($_POST['video']);
+    $picture = '';
+
+    // Handle image upload
+    if (isset($_FILES['picture']) && $_FILES['picture']['error'] === UPLOAD_ERR_OK) {
+        $ext = pathinfo($_FILES['picture']['name'], PATHINFO_EXTENSION);
+        $picture = uniqid('recipe_', true) . '.' . $ext;
+        move_uploaded_file($_FILES['picture']['tmp_name'], __DIR__ . '/IMG/' . $picture);
     }
+
+    // Validate required fields
+    if (!$title || !$difficulty_level || !$cook_time || !$servings || !$description || !$ingredients || !$instructions) {
+        $error = "Please fill in all required fields.";
+    } else {
+        $stmt = $pdo->prepare("INSERT INTO recipes (title, difficulty_level, prep_time, cook_time, servings, description, ingredients, instructions, video, picture, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $result = $stmt->execute([
+            $title, $difficulty_level, $prep_time, $cook_time, $servings, $description, $ingredients, $instructions, $video, $picture, $_SESSION['user']['id']
+        ]);
+        if ($result) {
+            $success = "Recipe added successfully!";
+        } else {
+            $error = "Failed to add recipe. Please try again.";
+        }
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

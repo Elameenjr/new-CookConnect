@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'connection.php';
+require 'connection.php'; // connection.php uses Ubuntu local server settings (127.0.0.1, cookconnect_user, StrongPassword123!, recipe_app)
 
 // --- Search, Filter, Sort, Pagination Logic ---
 $search = $_GET['search'] ?? '';
@@ -42,7 +42,6 @@ $stmt->execute($params);
 $recipes = $stmt->fetchAll();
 
 // Fetch unique categories for badges
-// Fix: Only fetch categories if the column exists, otherwise fallback to empty array
 $categories = [];
 try {
     $catRes = $pdo->query("SELECT DISTINCT category FROM recipes WHERE category IS NOT NULL AND category != ''");
@@ -249,9 +248,11 @@ try {
       <div class="col-md-6 col-lg-4">
         <div class="card shadow-sm h-100 border-0 recipe-card">
           <div class="position-relative">
-            <img src="<?= htmlspecialchars($recipe['picture'] ?? 'assets/IMG/placeholder.jpg') ?>"
-                 class="card-img-top"
-                 alt="<?= htmlspecialchars($recipe['title']) ?>">
+            <img src="<?= htmlspecialchars(
+    (!empty($recipe['picture']) && strpos($recipe['picture'], 'uploads/') !== 0)
+        ? 'uploads/' . $recipe['picture']
+        : (!empty($recipe['picture']) ? $recipe['picture'] : 'assets/IMG/placeholder.jpg')
+) ?>" class="card-img-top" alt="<?= htmlspecialchars($recipe['title']) ?>">
             <?php if (!empty($recipe['category'])): ?>
               <span class="badge badge-category position-absolute top-0 start-0 m-2"><?= htmlspecialchars($recipe['category']) ?></span>
             <?php endif; ?>
@@ -268,7 +269,9 @@ try {
                 <span class="text-muted ms-2">(<?= rand(50, 300) ?>)</span>
               </div>
             </div>
-            <a href="recipe-detail.php?id=<?= $recipe['id'] ?>" class="btn btn-danger btn-sm mb-2 w-100">View Recipe</a>
+            <a href="Recipe-detail.php?id=<?= $recipe['id'] ?>" class="btn btn-outline-danger btn-sm">
+  <i class="fas fa-eye me-1"></i> View Recipe
+</a>
             <div class="d-flex justify-content-between align-items-center">
               <span class="badge bg-secondary"><i class="fas fa-clock me-1"></i> <?= $recipe['cook_time'] ?> mins</span>
               <span class="badge bg-danger-subtle text-danger fw-semibold"><?= $recipe['difficulty_level'] ?></span>

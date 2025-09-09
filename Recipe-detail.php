@@ -1,6 +1,9 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 session_start();
-$conn = new mysqli("localhost", "root", "", "recipe_app");
+// Use 127.0.0.1 and your Ubuntu MySQL user credentials
+$conn = new mysqli("127.0.0.1", "cookconnect_user", "StrongPassword123!", "recipe_app");
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -129,8 +132,11 @@ $comments = $commentQuery->get_result();
 
         <!-- Left: Image -->
         <div class="w-100 w-md-50" style="flex: 1 1 45%;">
-          <img src="<?= htmlspecialchars($recipe['picture']) ?>" alt="<?= htmlspecialchars($recipe['title']) ?>"
-               class="img-fluid h-100 w-100" style="object-fit: cover;">
+          <img src="<?= htmlspecialchars(
+    (!empty($recipe['picture']) && strpos($recipe['picture'], 'uploads/') !== 0)
+        ? 'uploads/' . $recipe['picture']
+        : (!empty($recipe['picture']) ? $recipe['picture'] : 'assets/IMG/placeholder.jpg')
+) ?>" class="card-img-top" alt="<?= htmlspecialchars($recipe['title']) ?>">
         </div>
 
         <!-- Right: Content -->

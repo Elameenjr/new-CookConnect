@@ -1,4 +1,4 @@
-<?php include('process.php');?>
+<?php include('process.php'); // process.php uses connection.php, which is set for Ubuntu local server (127.0.0.1, cookconnect_user, StrongPassword123!, recipe_app) ?>
 <!doctype html>
 <html lang="en">
 <head>

@@ -1,4 +1,4 @@
-<?php include('process.php');?>
+<?php include('process.php'); // process.php uses connection.php, which is set for Ubuntu local server (127.0.0.1, cookconnect_user, StrongPassword123!, recipe_app) ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -47,10 +47,10 @@
                     <h4 class="text-center mb-4">Create Account</h4>
 
                     <?php if ($error): ?>
-                        <div class="alert alert-danger"><?= $error ?></div>
+                        <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
                     <?php endif; ?>
                     <?php if ($success): ?>
-                        <div class="alert alert-success"><?= $success ?></div>
+                        <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
                     <?php endif; ?>
 
                     <form method="POST" action="">

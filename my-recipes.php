@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'connection.php';
+require 'connection.php'; // connection.php already uses Ubuntu local server settings (127.0.0.1, cookconnect_user, StrongPassword123!, recipe_app)
 if (!isset($_SESSION['user'])) {
     header("Location: signin.php");
     exit;
@@ -101,7 +101,11 @@ $recipes = $stmt->fetchAll();
       <div class="col-md-6 col-lg-4">
         <div class="card shadow-sm h-100 border-0 recipe-card">
           <div class="position-relative">
-            <img src="<?= htmlspecialchars($recipe['picture'] ?? 'assets/IMG/placeholder.jpg') ?>" class="card-img-top" alt="<?= htmlspecialchars($recipe['title']) ?>">
+            <img src="<?= htmlspecialchars(
+    (!empty($recipe['picture']) && strpos($recipe['picture'], 'uploads/') !== 0 && strpos($recipe['picture'], 'http') !== 0)
+        ? 'uploads/' . $recipe['picture']
+        : (!empty($recipe['picture']) ? $recipe['picture'] : 'assets/IMG/placeholder.jpg')
+) ?>" class="card-img-top" alt="<?= htmlspecialchars($recipe['title']) ?>">
             <button class="btn btn-light position-absolute top-0 end-0 m-2 rounded-circle shadow-sm">
               <i class="far fa-heart text-danger"></i>
             </button>

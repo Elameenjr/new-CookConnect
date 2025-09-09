@@ -1,4 +1,15 @@
-<?php session_start(); ?>
+<?php
+session_start();
+require 'connection.php'; // Ensure database connection for Ubuntu local server
+
+if (!isset($_SESSION['user'])) {
+    header("Location: signin.php");
+    exit;
+}
+
+// Fetch user info if needed (example: get name/email from DB if not in session)
+$user = $_SESSION['user'];
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -99,18 +110,17 @@
 </head>
 <body>
   <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container px-4 px-lg-5">
-                <a class="navbar-brand fw-bold d-flex align-items-center " href="#!"> <i class="fas fa-utensils text-danger me-2"></i> CookConnect</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.php">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#footerSection ">About
-                    </ul>
-                       <?php if (isset($_SESSION['user'])) { ?>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container px-4 px-lg-5">
+      <a class="navbar-brand fw-bold d-flex align-items-center " href="#!"> <i class="fas fa-utensils text-danger me-2"></i> CookConnect</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+          <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.php">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#footerSection ">About</a></li>
+        </ul>
+        <?php if (isset($_SESSION['user'])) { ?>
           <a href="recipe-add.php" class="btn btn-danger"><i class="fas fa-plus me-1"></i> Add Recipe</a>
-          <!-- Profile Icon -->
           <a href="user_dashboard.php" class="btn btn-outline-secondary rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
             <i class="fas fa-user"></i>
           </a>
@@ -118,14 +128,14 @@
         <?php } else { ?>
           <a href="signin.php" class="btn btn-danger">Sign In</a>
         <?php } ?>
-                </div>
-            </div>
-        </nav>
+      </div>
+    </div>
+  </nav>
 <!-- Header -->
 <header class="bg-danger text-white py-4">
   <div class="container text-center">
     <h1 class="fw-bold">
-      Welcome, <?php echo isset($_SESSION['user']['name']) ? htmlspecialchars($_SESSION['user']['name']) : 'Guest'; ?>
+      Welcome, <?php echo isset($user['username']) ? htmlspecialchars($user['username']) : 'Guest'; ?>
     </h1>
     <p class="text-white-50">Manage your profile, recipes, and saved dishes</p>
   </div>
@@ -139,10 +149,10 @@
     <div class="col-lg-4">
       <div class="card shadow-sm border-0">
         <div class="card-body text-center">
-          <img src="https://i.pravatar.cc/100?u=<?php echo $_SESSION['user']['email'] ?? 'default'; ?>"
+          <img src="https://i.pravatar.cc/100?u=<?php echo $user['email'] ?? 'default'; ?>"
                class="rounded-circle mb-3" width="100" height="100" alt="User Avatar" />
-          <h5 class="fw-bold"><?php echo $_SESSION['user']['name'] ?? 'Username'; ?></h5>
-          <p class="text-muted small mb-2"><?php echo $_SESSION['user']['email'] ?? 'user@example.com'; ?></p>
+          <h5 class="fw-bold"><?php echo $user['username'] ?? 'Username'; ?></h5>
+          <p class="text-muted small mb-2"><?php echo $user['email'] ?? 'user@example.com'; ?></p>
           <a href="edit-profile.php" class="btn btn-outline-danger btn-sm">
             <i class="fas fa-edit me-1"></i> Edit Profile
           </a>
@@ -252,7 +262,7 @@
       <div class="col-md-4 mb-4">
         <h6 class="text-uppercase fw-semibold mb-3 text-danger">Contact</h6>
         <p class="text-white-50 small mb-2"><i class="fas fa-envelope me-2"></i> support@cookconnect.com</p>
-        <p class="text-white-50 small mb-0"><i class="fas fa-map-marker-alt me-2"></i> 123 Foodie Lane, Lagos, Nigeria</p>
+        <p class="text-white-50 small mb-0"><i class="fas fa-map-marker-alt me-2"></i> 123 Foodie Lane, Kano, Nigeria</p>
       </div>
 
     </div>
